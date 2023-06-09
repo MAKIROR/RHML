@@ -1,4 +1,4 @@
-module LinearRegression (linearRegression) where
+module LinearRegression (linearRegression, predict) where
 
 import Data.List (foldl')
 
@@ -13,3 +13,6 @@ linearRegression points =
       slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX)
       intercept = (sumY - slope * sumX) / n
   in Just (slope, intercept)
+
+predict :: (Double, Double) -> Double -> Double
+predict (slope, intercept) x = intercept + slope * x
