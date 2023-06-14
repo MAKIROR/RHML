@@ -1,12 +1,11 @@
-module LinearRegression (linearRegression, predict) where
+module LinearRegression  (unaryLinearRegression , predict) where
 
-import Data.List (foldl')
+import Data.List (foldl') 
+import Data.Fixed (fixed)
 
-type DataPoint = (Double, Double)
-
-linearRegression :: [DataPoint] -> Maybe (Double, Double)
-linearRegression [] = Nothing
-linearRegression points =
+unaryLinearRegression :: [(Double, Double)] -> Maybe (Double, Double)
+unaryLinearRegression [] = Nothing
+unaryLinearRegression points =
   let n = fromIntegral $ length points
       (sumX, sumY, sumXY, sumX2) = foldl' accumulate (0, 0, 0, 0) points
       accumulate (sX, sY, sXY, sX2) (x, y) = (sX + x, sY + y, sXY + x * y, sX2 + x * x)
@@ -15,4 +14,4 @@ linearRegression points =
   in Just (slope, intercept)
 
 predict :: (Double, Double) -> Double -> Double
-predict (slope, intercept) x = intercept + slope * x
+predict (slope, intercept) x = fixed 3 (intercept + slope * x)
