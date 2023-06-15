@@ -4,11 +4,11 @@ import LinearRegression
 
 main :: IO ()
 main = do
-  let dataset = [(1, 2.1), (1.5, 3.2), (2, 4.3), (2.5, 5.4), (3, 6.5), (3.5, 7.6), (4, 8.7), (4.5, 9.8), (5, 10.9), (5.5, 12.0)]
+  let dataset = [(0.2, 2.7), (1.2, 3.6), (2.3, 4.5), (2.8, 6.3), (3.5, 5.9), (3.8, 7.3), (3.9, 8.4), (5.1, 9.5), (5.3, 11.2), (4.9, 12.7)]
   let regressionResult = unaryLinearRegression dataset
   case regressionResult of
     Just result -> do
-      let x = 8
+      let x = 4
           predictedValue = predict result x
       putStrLn $ "Linear regression result: " ++ show result
       putStrLn $ "Predicted value for x = " ++ show x ++ ": " ++ show predictedValue

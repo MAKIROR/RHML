@@ -1,7 +1,9 @@
 module LinearRegression  (unaryLinearRegression , predict) where
 
 import Data.List (foldl') 
-import Data.Fixed (fixed)
+
+formatFloat :: Double -> Double
+formatFloat x = fromIntegral (round (x * 1000) :: Integer) / 1000
 
 unaryLinearRegression :: [(Double, Double)] -> Maybe (Double, Double)
 unaryLinearRegression [] = Nothing
@@ -11,7 +13,7 @@ unaryLinearRegression points =
       accumulate (sX, sY, sXY, sX2) (x, y) = (sX + x, sY + y, sXY + x * y, sX2 + x * x)
       slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX)
       intercept = (sumY - slope * sumX) / n
-  in Just (slope, intercept)
+  in Just (formatFloat slope, formatFloat intercept)
 
 predict :: (Double, Double) -> Double -> Double
-predict (slope, intercept) x = fixed 3 (intercept + slope * x)
+predict (slope, intercept) x = formatFloat intercept + slope * x
