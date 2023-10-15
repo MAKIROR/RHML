@@ -1,6 +1,6 @@
-module LinearRegression  (unaryLinearRegression , predict) where
+module LinearRegression (unaryLinearRegression , predict) where
 
-import Data.List (foldl') 
+import Data.List (foldl')
 
 formatFloat :: Double -> Double
 formatFloat x = fromIntegral (round (x * 1000) :: Integer) / 1000
