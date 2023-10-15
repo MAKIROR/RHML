@@ -3,7 +3,7 @@ module BinomialDistribution (likelihoodForP, binomialLikelihood, findMLE) where
 import Data.List
 
 binomialLikelihood :: [Int] -> Double -> Double
-binomialLikelihood observations p = product [(choose n k) * (p^k) * ((1-p)^(n-k)) | k <- observations]
+binomialLikelihood observations p = sum [log (choose n k) + fromIntegral k * log p + fromIntegral (n - k) * log (1 - p) | k <- observations]
   where 
       n = fromIntegral $ length observations
       choose :: Int -> Int -> Double
