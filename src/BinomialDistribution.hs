@@ -1,4 +1,4 @@
-module BinomialDistribution (likelihoodForP, binomialLikelihood, findMLE) where
+module BinomialDistribution (binomialLikelihood, findMLE) where
 
 import Data.List
 
