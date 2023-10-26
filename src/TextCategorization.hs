@@ -1,11 +1,11 @@
-module TextCategorization (classifyDocument ) where
+module TextCategorization (classifyDocument, DocumentClass) where
 
 import Data.Map (Map, fromListWith, toList)
 import Data.List (sort)
 import Data.Char (toLower)
 import Data.Maybe (fromMaybe)
 
-data DocumentClass = Positive | Negative deriving (Eq, Show)
+data DocumentClass = Positive | Negative | Neutral deriving (Eq, Show)
 
 vocabulary :: [String]
 vocabulary = ["good", "bad", "excellent", "poor", "amazing", "terrible"]
@@ -27,7 +27,7 @@ unionFrequencies = fromListWith (+) . toList
 
 classifyDocument :: Map DocumentClass (Map String Int) -> String -> DocumentClass
 classifyDocument classFrequencies document =
-    argmax (\cls -> calculateClassProbability cls (tokenize document)) (keys classFrequencies)
+    argmax (\cls -> calculateClassProbability cls (tokenize document)) [Positive, Negative, Neutral]
   where
     argmax _ [] = error "No classes provided"
     argmax f (x:xs) = foldr (\y acc -> if f y > f acc then y else acc) x xs

@@ -1,9 +1,14 @@
 module Main (main) where
 
-import BinomialDistribution
+import TextCategorization
 
 main :: IO ()
 main = do
-    let observations = [1,1]
-    let likelihood = BinomialDistribution.findMLE observations
-    putStrLn $ "Likelihood: " ++ show likelihood
+    let trainingData :: [(String, DocumentClass)]
+        trainingData = [
+            ("This is a good movie", Positive),
+            ("The movie was terrible", Negative),
+            ("An excellent film", Positive),
+            ("I hated it, a really bad movie", Negative),
+            ("It's an okay film", Neutral)
+            ]
