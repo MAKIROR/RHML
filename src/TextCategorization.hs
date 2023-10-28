@@ -1,40 +1,38 @@
-module TextCategorization (classifyDocument, DocumentClass) where
+module TextCategorization (
+    DocumentClass(..), 
+    Document, 
+    classifyDocument,
+    calculateCategoryProbability,
+    calculateWordProbabilities
+    ) where
 
-import Data.Map (Map, fromListWith, toList)
-import Data.List (sort)
-import Data.Char (toLower)
-import Data.Maybe (fromMaybe)
+import Data.Map (fromListWith, toList)
+import Data.List (nub)
 
 data DocumentClass = Positive | Negative | Neutral deriving (Eq, Show)
+type Document = (DocumentClass, [String])
 
-vocabulary :: [String]
-vocabulary = ["good", "bad", "excellent", "poor", "amazing", "terrible"]
+calculateWordProbabilities :: [Document] -> DocumentClass -> [(String, Double)]
+calculateWordProbabilities documents category = 
+    let categoryDocs = filter (\(docClass, _) -> docClass == category) documents
+        categoryTokens = concatMap snd categoryDocs
+        wordCounts = fromListWith (+) [(word, 1) | word <- categoryTokens]
+        totalWords = length categoryTokens
+    in [(word, fromIntegral count / fromIntegral totalWords) | (word, count) <- toList wordCounts]
 
-tokenize :: String -> [String]
-tokenize = map (map toLower) . words
+calculateCategoryProbability :: [Document] -> DocumentClass -> Double
+calculateCategoryProbability documents category =
+    let totalDocs = length documents
+        categoryDocs = length (filter (\(docClass, _) -> docClass == category) documents)
+    in fromIntegral categoryDocs / fromIntegral totalDocs
 
-wordFrequencies :: [String] -> Map String Int
-wordFrequencies = fromListWith (+) . flip zip (repeat 1)
-
-trainClassifier :: [(String, DocumentClass)] -> Map DocumentClass (Map String Int)
-trainClassifier trainingSet = fromListWith (unionFrequencies) [
-    (cls, wordFrequencies (tokenize doc))
-    | (doc, cls) <- trainingSet
-    ]
-
-unionFrequencies :: Map String Int -> Map String Int -> Map String Int
-unionFrequencies = fromListWith (+) . toList
-
-classifyDocument :: Map DocumentClass (Map String Int) -> String -> DocumentClass
-classifyDocument classFrequencies document =
-    argmax (\cls -> calculateClassProbability cls (tokenize document)) [Positive, Negative, Neutral]
-  where
-    argmax _ [] = error "No classes provided"
-    argmax f (x:xs) = foldr (\y acc -> if f y > f acc then y else acc) x xs
-
-    calculateClassProbability cls docWords =
-        let classWordFreq = fromMaybe (fromList []) (lookup cls classFrequencies)
-            totalWords = sum (elems classWordFreq)
-            wordProb word = fromIntegral (findWordFrequency word classWordFreq + 1) / fromIntegral (totalWords + length vocabulary)
-            findWordFrequency word freqMap = fromMaybe 0 (lookup word freqMap)
-        in product (map wordProb docWords)
+classifyDocument :: [Document] -> [String] -> [(DocumentClass, Double)]
+classifyDocument documents document =
+    let categories = [Positive, Negative, Neutral]
+        documentTokens = nub document
+    in [(category, calculateCategoryProbability documents category * product [lookupWordProbability word category | word <- documentTokens]) | category <- categories]
+    where
+        lookupWordProbability word category = 
+            case lookup word (calculateWordProbabilities documents category) of
+                Just prob -> prob
+                Nothing -> 1.0 / (fromIntegral (length (nub (map fst documents))) + 1.0)

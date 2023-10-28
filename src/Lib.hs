@@ -1,6 +1,5 @@
 module Lib
-    ( someFunc
+    ( module TextCategorization,
     ) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+import TextCategorization
