@@ -1,4 +1,4 @@
-import Lib
+import TextCategorization
 import Data.Function (on)
 import Data.List (maximumBy)
 
