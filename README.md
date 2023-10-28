@@ -1,1 +1,1 @@
-# RHbrain
+# RHML (ROR Haskell Machine Learning)
