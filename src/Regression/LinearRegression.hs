@@ -1,4 +1,4 @@
-module LinearRegression (unaryLinearRegression , predict) where
+module Regression.LinearRegression (unaryLinearRegression , predict) where
 
 import Data.List (foldl')
 

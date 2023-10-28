@@ -7,19 +7,38 @@ version:             0.1.0.0
 homepage:            https://github.com/githubuser/RHbrain#readme
 license:             BSD-3-Clause
 license-file:        LICENSE
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2023 Author name here
-category:            Web
+author:              Makiror
+maintainer:          gzanan@gmail.com
+copyright:           2023 Makiror
+category:            Math
 build-type:          Simple
 extra-source-files:  README.md
                      CHANGELOG.md
 
+library
+  exposed-modules:
+      TextCategorization,
+      GaussianNaiveBayes,
+      Probability.GaussianProbability
+  other-modules:
+      Paths_RHbrain
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5,
+      containers,
+  default-language: Haskell2010
+
 test-suite test-my-library
+  other-modules:
+    Paths_RHbrain
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   hs-source-dirs: test
   build-depends:
     base,
+    RHbrain,
     hspec,
+    containers,
   default-language: Haskell2010
